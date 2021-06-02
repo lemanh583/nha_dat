@@ -21,9 +21,9 @@
             <td>{{$dt->nameType}}</td>
             <td>{{$dt->des}}</td>
             <td>
-                <button class="btn btn-success">Xem</button>
-                <button class="btn btn-warning">Sửa</button>
-                <button class="btn btn-danger">Xoá</button>
+                <button class="btn btn-success"><a href="{{route('viewDetailUser',$dt->id_detail)}}" style="color: white;text-decoration: none">Xem</a></button>
+                <button class="btn btn-warning"><a href="{{route('editDetailUser',$dt->id_detail)}}" style="color: white;text-decoration: none">Sửa</a></button>
+                <button class="btn btn-danger xoact" url="{{route('deleteDetailUser',$dt->id_detail)}}">Xoá</button>
             </td>
           </tr>
           @endforeach
@@ -34,8 +34,12 @@
 
 <div style="margin-left: 80%;">
     <div class="row">
-        <button class="btn btn-primary" ><a href="{{route('home')}}" style="color: white">Quay về</a></button>
+    <button class="btn btn-primary" ><a href="{{route('home')}}" style="color: white">Quay về</a></button>
     <button class="btn btn-success"><a href="{{route('showAddDetailUser')}}" style="color: white">Thêm bài viết</a></button>
     </div>
     
 </div>
+<script src="{{asset('')}}plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="{{asset('')}}plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{asset('index.js')}}"></script>

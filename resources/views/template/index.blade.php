@@ -33,15 +33,21 @@
         <link rel="stylesheet" href="{{asset('')}}assets/css/owl.transitions.css">
         <link rel="stylesheet" href="{{asset('')}}assets/css/style.css">
         <link rel="stylesheet" href="{{asset('')}}assets/css/responsive.css">
+        <style>
+            html{
+                scroll-behavior: smooth;
+            }
+        </style>
     </head>
     <body>
+        <div id="head"></div>
 
         <div id="preloader">
             <div id="status">&nbsp;</div>
         </div>
         <!-- Body content -->
 
-        <div class="header-connect">
+        {{-- <div class="header-connect">
             <div class="container">
                 <div class="row">
                     <div class="col-md-5 col-sm-8  col-xs-12">
@@ -66,7 +72,7 @@
                     </div>
                 </div>
             </div>
-        </div>            
+        </div>             --}}
         <!--End top header -->
 
         <nav class="navbar navbar-default ">
@@ -86,7 +92,14 @@
                         </div>
                     <ul class="main-nav nav navbar-nav navbar-right">
                         <li class="wow fadeInDown " data-wow-delay="0.1s"><a class="active" href="{{route('home')}}">Home</a></li>
-                        <li class="dropdown ymm-sw " data-wow-delay="0.1s">
+
+                        @foreach($categories as $ct)
+
+                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="" href="">{{$ct->name}}</a></li>
+                        @endforeach
+                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a >||</a></li>
+
+                        {{-- <li class="dropdown ymm-sw " data-wow-delay="0.1s">
                             <a href="index.html" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Dự án <b class="caret"></b></a>
                             <ul class="dropdown-menu navbar-nav">
                                 <li>
@@ -96,9 +109,9 @@
                                     <a href="bietthu.html">Biệt thự</a>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="" href="tintuc.html">Tin tức</a></li>
-                        <li class="wow fadeInDown" data-wow-delay="0.4s"><a href="lienhe.html" style="margin-right:85px">Liên hệ</a></li>
+                        </li> --}}
+                        {{-- <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="" href="tintuc.html">Tin tức</a></li>
+                        <li class="wow fadeInDown" data-wow-delay="0.4s"><a href="lienhe.html" style="margin-right:85px">Liên hệ</a></li> --}}
 
                         @if(Auth::check())
                         <li class="dropdown ymm-sw " data-wow-delay="0.1s" style="margin-right:-80px">
@@ -109,6 +122,9 @@
                                 </li>
                                 <li>
                                     <a href="{{route('listDetailUser')}}">Quản lý bài viết</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('viewProfile')}}">Quản lý profile</a>
                                 </li>
                                 <li>
                                     <a href="{{route('logout')}}">Đăng xuất</a>
@@ -316,7 +332,8 @@
                                             <span class="proerty-price pull-right">{{$dt->amount}} đ</span>
                                             <br> <b>Loại:</b> {{$dt->nameType}}
                                             <br><b>Kiểu:</b> {{$dt->nameCategory}}
-                                            <br><b>Địa chỉ</b> {{$dt->tinh}}, {{$dt->huyen}}, {{$dt->xa}}
+                                            <br><b>Địa chỉ: </b> {{$dt->tinh}}, {{$dt->huyen}}, {{$dt->xa}}
+                                            <br><b>Ngày đăng bài:</b> {{$dt->created_at}}
                                             <br><br><span class=" pull-right">{{$dt->nameUser}}</span>
                                         </div>
                                     </div>
@@ -468,9 +485,18 @@
                     </div>
                 </div>
             </div>
-            <div>skcnkjsdcjksd</div>
+            <div id="cuonlen"style="position: fixed;right:0px;top:80%"><a href="#head"><img src="https://icon-library.com/images/top-arrow-icon/top-arrow-icon-19.jpg" alt="" style="width:80px;height:80px;"></a></div>
         </div>
-          
+          <script>
+              
+                let cuonlen = document.getElementById("cuonlen");
+                    window.addEventListener('scroll',function(){
+                    let vitri = window.pageYOffset;
+                    if(vitri <= 720){ cuonlen.style.display = "none";}
+                    else{cuonlen.style.display = "block";}
+                });
+   
+          </script>
        
           <script src="{{asset('')}}assets/js/modernizr-2.6.2.min.js"></script>
 

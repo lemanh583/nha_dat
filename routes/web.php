@@ -19,8 +19,14 @@ Route::get('/search','IndexController@searchIndex')->name('searchIndex');
 Route::get('/showAddDetailUser','IndexController@showAddDetailUser')->name('showAddDetailUser')->middleware('auth');
 Route::get('/ajax','IndexController@ajaxIndex')->name('ajaxIndex');
 Route::get('/ajaxVilages','IndexController@ajaxVilagesIndex')->name('ajaxVilagesIndex');
-Route::post('/addDetail','IndexController@addDetailIndex')->name('addDetailIndex');
-Route::get('/listDetailUser','IndexController@listDetailUser')->name('listDetailUser');
+Route::post('/addDetail','IndexController@addDetailIndex')->name('addDetailIndex')->middleware('auth');
+Route::get('/listDetailUser','IndexController@listDetailUser')->name('listDetailUser')->middleware('auth');
+Route::get('/viewDetailUser/{id}','IndexController@viewDetailUser')->name('viewDetailUser')->middleware('auth');
+Route::get('/deleteDetailUser/{id}','DetailController@deleteDetail')->name('deleteDetailUser')->middleware('auth');
+Route::get('/editDetailUser/{id}','IndexController@editDetailUser')->name('editDetailUser')->middleware('auth');
+Route::post('/updateDetailUser','IndexController@updateDetailUser')->name('updateDetailUser')->middleware('auth');
+Route::get('/viewProfile','IndexController@viewProfile')->name('viewProfile')->middleware('auth');
+Route::post('/updateUserIndex','UserController@updateUser')->name('updateUserIndex')->middleware('auth');
 
 
 Route::get('/login','LogRegController@showformLogin')->name('login');

@@ -36,12 +36,15 @@ class IndexController extends Controller
                                         'districts.name as huyen',
                                         'villages.name as xa',
                                         'images.url',
-                                        'details.id_detail'
+                                        'details.id_detail',
+                                        'details.created_at'
                                     )
                             ->groupBy('details.id_detail')        
                             ->paginate(10);
+        
+        $categories = DB::table('categories')->get();
                             // dd($listDetail);
-        return view('template.index',compact('listDetail'));
+        return view('template.index',compact('listDetail','categories'));
     }
 
 
@@ -174,5 +177,161 @@ class IndexController extends Controller
         return view('template.listDetailUser',compact('listDetail'));
     }
 
+    public function viewDetailUser($id)
+    {
+        $detail = DB::table('provinces')
+                            ->join('districts','provinces.id_pro','=','districts.id_pro')
+                            ->join('villages','districts.id_dis','=','villages.id_dis')
+                            ->join('maps','villages.id_vil','=','maps.id_vil')
+                            ->join('details','maps.id_map','=','details.id_map')
+                            ->join('types','details.id_type','=','types.id_type')
+                            ->join('categories','details.id_category','=','categories.id_category')
+                            ->join('images','details.id_detail','=','images.id_detail')
+                            ->join('users','details.id','=','users.id')
+                            ->where('details.id_detail','=',$id)
+                            ->select(
+                                    'users.name as nameUser',
+                                        'users.email' ,
+                                        'categories.name as nameCategory',
+                                        'types.name as nameType',
+                                        'details.title',
+                                        'details.descriptions',
+                                        'details.area',
+                                        'details.amount',
+                                        'provinces.name as tinh',
+                                        'districts.name as huyen',
+                                        'villages.name as xa',
+                                        'provinces.id_pro',
+                                        'villages.id_vil',
+                                        'districts.id_dis',
+                                        'images.url',
+                                        'images.id_img',
+                                        'maps.coordinates'
+                                    )
+                            ->get();
+        $data = $detail[0]->coordinates;
+        $coordiantes = explode(',',  $data);
+        $lat = $coordiantes[0];
+        $lng = $coordiantes[1];
+        $Types = DB::table('types')->get();
+        $categories = DB::table('categories')->get();
+        $provinces = DB::table('provinces')->get();
+        $districts = DB::table('districts')->where('districts.id_pro','=',$detail[0]->id_pro)->get();
+        $villages = DB::table('villages')->where('villages.id_dis','=',$detail[0]->id_dis)->get();  
+        // dd($Types);
+        return view('template.viewDetail',compact('detail','Types','categories','provinces',
+                                'districts','villages','lat','lng'
+                    ));
+    }
 
+
+    public function editDetailUser($id)
+    {
+        $detail = DB::table('provinces')
+                            ->join('districts','provinces.id_pro','=','districts.id_pro')
+                            ->join('villages','districts.id_dis','=','villages.id_dis')
+                            ->join('maps','villages.id_vil','=','maps.id_vil')
+                            ->join('details','maps.id_map','=','details.id_map')
+                            ->join('types','details.id_type','=','types.id_type')
+                            ->join('categories','details.id_category','=','categories.id_category')
+                            ->join('images','details.id_detail','=','images.id_detail')
+                            ->join('users','details.id','=','users.id')
+                            ->where('details.id_detail','=',$id)
+                            ->select(
+                                    'users.name as nameUser',
+                                        'users.email' ,
+                                        'categories.name as nameCategory',
+                                        'types.name as nameType',
+                                        'details.title',
+                                        'details.descriptions',
+                                        'details.area',
+                                        'details.amount',
+                                        'provinces.name as tinh',
+                                        'districts.name as huyen',
+                                        'villages.name as xa',
+                                        'provinces.id_pro',
+                                        'villages.id_vil',
+                                        'districts.id_dis',
+                                        'images.url',
+                                        'images.id_img',
+                                        'maps.coordinates',
+                                        'details.id_detail'
+                                    
+                                    )
+                            ->get();
+        $data = $detail[0]->coordinates;
+        $coordiantes = explode(',',  $data);
+        $lat = $coordiantes[0];
+        $lng = $coordiantes[1];
+        $Types = DB::table('types')->get();
+        $categories = DB::table('categories')->get();
+        $provinces = DB::table('provinces')->get();
+        $districts = DB::table('districts')->where('districts.id_pro','=',$detail[0]->id_pro)->get();
+        $villages = DB::table('villages')->where('villages.id_dis','=',$detail[0]->id_dis)->get();  
+        return view('template.updateDetail',compact('detail','Types','categories','provinces',
+                                'districts','villages','lat','lng'
+                    ));
+
+    }
+
+
+    public function updateDetailUser(Request $request){
+        // dd($request->all());
+        $id = $request->input('id');
+        $title = $request->input('tieu_de');
+        $type = $request->input('type');
+        $category = $request->input('category');
+        $area = $request->input('area');
+        $amount = $request->input('amount');
+        $mota = $request->input('mota');
+        $toa_do = $request->input('toa_do');
+
+        if($request->hasFile('file')){
+            $detail = detail::find($id);
+            $detail->title = $title;
+            $detail->amount = $amount;
+            $detail->area = $area;
+            $detail->descriptions = $mota;
+            $detail->id_category = $category;
+            $detail->id_type = $type;
+            $detail->save();
+
+            $map = maps::find($detail->id_map);
+            $map->coordinates =  $toa_do;
+            $map->save();
+
+            $images = $request->file('file');
+            foreach( $images as $img){
+                $image = new images;
+                $image->url = Storage::url($img->store('public/detail_img'));
+                $image->id_detail = $id;
+                $image->save();    
+            }
+        }
+        else{
+            $detail = detail::find($id);
+            $detail->title = $title;
+            $detail->amount = $amount;
+            $detail->area = $area;
+            $detail->descriptions = $mota;
+            $detail->id_category = $category;
+            $detail->id_type = $type;
+            $detail->save();
+    
+            $map = maps::find($detail->id_map);
+            $map->coordinates =  $toa_do;
+            $map->save();
+        }
+        return redirect()->route('listDetailUser');
+    }
+
+
+    public function viewProfile()
+    {
+        $user = User::where('id','=',Auth::user()->id)->get();
+        $count = detail::where('id','=',Auth::user()->id)->count();
+       return view('template.profileUser',compact('user','count'));
+    }
+
+   
 }
