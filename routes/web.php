@@ -27,6 +27,7 @@ Route::get('/editDetailUser/{id}','IndexController@editDetailUser')->name('editD
 Route::post('/updateDetailUser','IndexController@updateDetailUser')->name('updateDetailUser')->middleware('auth');
 Route::get('/viewProfile','IndexController@viewProfile')->name('viewProfile')->middleware('auth');
 Route::post('/updateUserIndex','UserController@updateUser')->name('updateUserIndex')->middleware('auth');
+Route::get('details/{id}','IndexController@details')->name('details');
 
 
 Route::get('/login','LogRegController@showformLogin')->name('login');

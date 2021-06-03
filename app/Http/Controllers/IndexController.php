@@ -333,5 +333,53 @@ class IndexController extends Controller
        return view('template.profileUser',compact('user','count'));
     }
 
+
+    public function details($id)
+    {   
+        $detail = DB::table('provinces')
+                        ->join('districts','provinces.id_pro','=','districts.id_pro')
+                        ->join('villages','districts.id_dis','=','villages.id_dis')
+                        ->join('maps','villages.id_vil','=','maps.id_vil')
+                        ->join('details','maps.id_map','=','details.id_map')
+                        ->join('types','details.id_type','=','types.id_type')
+                        ->join('categories','details.id_category','=','categories.id_category')
+                        ->join('images','details.id_detail','=','images.id_detail')
+                        ->join('users','details.id','=','users.id')
+                        ->where('details.id_detail','=',$id)
+                        ->select(
+                                'users.name as nameUser',
+                                    'users.email' ,
+                                    'users.phone_number',
+                                    'users.images',
+                                    'categories.name as nameCategory',
+                                    'types.name as nameType',
+                                    'details.title',
+                                    'details.descriptions',
+                                    'details.area',
+                                    'details.amount',
+                                    'provinces.name as tinh',
+                                    'districts.name as huyen',
+                                    'villages.name as xa',
+                                    'provinces.id_pro',
+                                    'villages.id_vil',
+                                    'districts.id_dis',
+                                    'images.url',
+                                    'images.id_img',
+                                    'maps.coordinates',
+                                    'details.id_detail'
+                                
+                                )
+                        // ->groupBy('details.id_detail')   
+                        ->get();
+                $data = $detail[0]->coordinates;
+                $coordiantes = explode(',',  $data);
+                $lat = $coordiantes[0];
+                $lng = $coordiantes[1];
+                $categories = DB::table('categories')->get();
+                // dd($detail);
+                return view('template.details',compact('detail','lat','lng','categories'));
+
+        // return view('template.details');
+    }
    
 }

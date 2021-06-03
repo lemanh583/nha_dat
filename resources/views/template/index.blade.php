@@ -93,11 +93,11 @@
                     <ul class="main-nav nav navbar-nav navbar-right">
                         <li class="wow fadeInDown " data-wow-delay="0.1s"><a class="active" href="{{route('home')}}">Home</a></li>
 
-                        @foreach($categories as $ct)
+                        {{-- @foreach($categories as $ct)
 
                         <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="" href="">{{$ct->name}}</a></li>
                         @endforeach
-                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a >||</a></li>
+                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a >||</a></li> --}}
 
                         {{-- <li class="dropdown ymm-sw " data-wow-delay="0.1s">
                             <a href="index.html" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Dự án <b class="caret"></b></a>
@@ -322,11 +322,11 @@
                                 <div class="col-sm-6 col-md-3 p0">
                                     <div class="box-two proerty-item">
                                         <div class="item-thumb">
-                                            <a href="simpleBietthu.html" ><img src="{{$dt->url}}"></a>
+                                            <a href="{{route('details',$dt->id_detail)}}" ><img src="{{$dt->url}}"></a>
                                         </div>
 
                                         <div class="item-entry overflow">
-                                            <h5><a href="simpleBietthu.html"> {{$dt->titledt}} </a></h5>
+                                            <h5><a href="{{route('details',$dt->id_detail)}}"> {{$dt->titledt}} </a></h5>
                                             <div class="dot-hr"></div>
                                             <span class="pull-left"><b> Rộng :</b> {{$dt->area}}m </span>
                                             <span class="proerty-price pull-right">{{$dt->amount}} đ</span>

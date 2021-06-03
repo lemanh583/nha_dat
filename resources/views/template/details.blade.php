@@ -19,22 +19,22 @@
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-        <link rel="stylesheet" href="assets/css/normalize.css">
-        <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-        <link rel="stylesheet" href="assets/css/fontello.css">
-        <link href="assets/fonts/icon-7-stroke/css/pe-icon-7-stroke.css" rel="stylesheet">
-        <link href="assets/fonts/icon-7-stroke/css/helper.css" rel="stylesheet">
-        <link href="assets/css/animate.css" rel="stylesheet" media="screen">
-        <link rel="stylesheet" href="assets/css/bootstrap-select.min.css"> 
-        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="assets/css/icheck.min_all.css">
-        <link rel="stylesheet" href="assets/css/price-range.css">
-        <link rel="stylesheet" href="assets/css/owl.carousel.css">  
-        <link rel="stylesheet" href="assets/css/owl.theme.css">
-        <link rel="stylesheet" href="assets/css/owl.transitions.css">
-        <link rel="stylesheet" href="assets/css/lightslider.min.css">
-        <link rel="stylesheet" href="assets/css/style.css">
-        <link rel="stylesheet" href="assets/css/responsive.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/normalize.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/fontello.css">
+        <link href="{{asset('')}}assets/fonts/icon-7-stroke/css/pe-icon-7-stroke.css" rel="stylesheet">
+        <link href="{{asset('')}}assets/fonts/icon-7-stroke/css/helper.css" rel="stylesheet">
+        <link href="{{asset('')}}assets/css/animate.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/bootstrap-select.min.css"> 
+        <link rel="stylesheet" href="{{asset('')}}bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/icheck.min_all.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/price-range.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/owl.carousel.css">  
+        <link rel="stylesheet" href="{{asset('')}}assets/css/owl.theme.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/owl.transitions.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/lightslider.min.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/style.css">
+        <link rel="stylesheet" href="{{asset('')}}assets/css/responsive.css">
     </head>
     <body>
 
@@ -75,18 +75,25 @@
             <div class="container">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="index.html"><img src="assets/img/logo.png" alt=""></a>
+                    <a class="navbar-brand" href="index.html"><img src="{{asset('')}}assets/img/logo.png" alt=""></a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse yamm" id="navigation">
                     <div class="button navbar-right">
-                        <button class="navbar-btn nav-button wow bounceInRight login" data-wow-delay="0.4s">Đăng nhập</button>
-                        <button class="navbar-btn nav-button wow fadeInRight" data-wow-delay="0.5s">Đăng ký</button>
+                        @if(!Auth::check())
+                            <button class="navbar-btn nav-button wow bounceInRight login" data-wow-delay="0.4s"><a href="{{route('login')}}">Đăng nhập</a></button>
+                            <button class="navbar-btn nav-button wow fadeInRight" data-wow-delay="0.5s"><a href="{{route('showformRegister')}}">Đăng ký</a></button>
+                        @endif
                     </div>
                     <ul class="main-nav nav navbar-nav navbar-right">
-                        <li class="wow fadeInDown " data-wow-delay="0.1s"><a class="active" href="index.html">Home</a></li>
-                        <li class="dropdown ymm-sw " data-wow-delay="0.1s">
+                        <li class="wow fadeInDown " data-wow-delay="0.1s"><a class="active" href="{{route('home')}}">Home</a></li>
+                        @foreach($categories as $ct)
+
+                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="" href="">{{$ct->name}}</a></li>
+                        @endforeach
+                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a >||</a></li>
+                        {{-- <li class="dropdown ymm-sw " data-wow-delay="0.1s">
                             <a href="index.html" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Dự án <b class="caret"></b></a>
                             <ul class="dropdown-menu navbar-nav">
                                 <li>
@@ -98,7 +105,26 @@
                             </ul>
                         </li>
                         <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="" href="tintuc.html">Tin tức</a></li>
-                        <li class="wow fadeInDown" data-wow-delay="0.4s"><a href="lienhe.html">Liên hệ</a></li>
+                        <li class="wow fadeInDown" data-wow-delay="0.4s"><a href="lienhe.html">Liên hệ</a></li> --}}
+                        @if(Auth::check())
+                        <li class="dropdown ymm-sw " data-wow-delay="0.1s" style="margin-right:-80px">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200"><b>{{Auth::user()->name}}</b> <b class="caret"></b></a>
+                            <ul class="dropdown-menu navbar-nav">
+                                <li>
+                                    <a href="{{route('showAddDetailUser')}}">Thêm bài viết</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('listDetailUser')}}">Quản lý bài viết</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('viewProfile')}}">Quản lý profile</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('logout')}}">Đăng xuất</a>
+                                </li>
+                            </ul>
+                        </li>
+                        @endif
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
@@ -136,18 +162,25 @@
                                     </div> 
 
                                     <ul id="image-gallery" class="gallery list-unstyled cS-hidden">
-                                        <li data-thumb="assets/img/property-1/property1.jpg"> 
-                                            <img src="assets/img/property-1/property1.jpg" />
+
+                                        @foreach ($detail as $dt)
+                                            
+                                     
+                                        <li data-thumb="{{asset($dt->url)}}"> 
+                                            <img src="{{asset($dt->url)}}" />
                                         </li>
-                                        <li data-thumb="assets/img/property-1/property2.jpg"> 
-                                            <img src="assets/img/property-1/property3.jpg" />
+
+
+                                        @endforeach
+                                        {{-- <li data-thumb="{{asset('')}}assets/img/property-1/property2.jpg"> 
+                                            <img src="{{asset('')}}assets/img/property-1/property3.jpg" />
                                         </li>
-                                        <li data-thumb="assets/img/property-1/property3.jpg"> 
-                                            <img src="assets/img/property-1/property3.jpg" />
+                                        <li data-thumb="{{asset('')}}assets/img/property-1/property3.jpg"> 
+                                            <img src="{{asset('')}}assets/img/property-1/property3.jpg" />
                                         </li>
-                                        <li data-thumb="assets/img/property-1/property4.jpg"> 
-                                            <img src="assets/img/property-1/property4.jpg" />
-                                        </li>                                         
+                                        <li data-thumb="{{asset('')}}assets/img/property-1/property4.jpg"> 
+                                            <img src="{{asset('')}}assets/img/property-1/property4.jpg" />
+                                        </li>                                          --}}
                                     </ul>
                                 </div>
                             </div>
@@ -155,83 +188,90 @@
 
                         <div class="single-property-wrapper">
                             <div class="single-property-header">                                          
-                                <h1 class="property-title pull-left">Biệt thự ở Hà Nội</h1>
-                                <span class="property-price pull-right">300,000 đ</span>
+                                <h1 class="property-title pull-left"><b>{{$detail[0]->title}}</b></h1>
+                                <span class="property-price pull-right">{{$detail[0]->amount}}  Đ</span>
                             </div>
 
                             <div class="property-meta entry-meta clearfix ">   
 
-                                <div class="col-xs-6 col-sm-3 col-md-3 p-b-15">
+                                {{-- <div class="col-xs-6 col-sm-3 col-md-3 p-b-15">
                                     <span class="property-info-icon icon-tag">                                        
-                                        <img src="assets/img/icon/sale-orange.png">
+                                        <h2>Mức giá</h2>
                                     </span>
                                     <span class="property-info-entry">
-                                        <span class="property-info-label">TÌNH TRẠNH</span>
-                                        <span class="property-info-value">GIẢM GIÁ</span>
+                                        <span class="property-info-label"><h3>13245</h3></span>
+                                      
                                     </span>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-xs-6 col-sm-3 col-md-3 p-b-15">
                                     <span class="property-info icon-area">
-                                        <img src="assets/img/icon/room-orange.png">
+                                        <h2>Diện tích</h2>
                                     </span>
                                     <span class="property-info-entry">
-                                        <span class="property-info-label">RỘNG</span>
-                                        <span class="property-info-value">12<b class="property-info-unit">M</b></span>
+
+                                        <span class="property-info-value"><h3>{{$detail[0]->area}}</h3></span>
                                     </span>
                                 </div>
 
                                 <div class="col-xs-6 col-sm-3 col-md-3 p-b-15">
                                     <span class="property-info-icon icon-bed">
-                                        <img src="assets/img/icon/bed-orange.png">
+                                        <h2>Loại</h2>
                                     </span>
                                     <span class="property-info-entry">
-                                        <span class="property-info-label">Giường</span>
-                                        <span class="property-info-value">2</span>
+                                       
+                                        <span class="property-info-value"><h3>{{$detail[0]->nameType}}</h3></span>
                                     </span>
                                 </div>
 
                                 <div class="col-xs-6 col-sm-3 col-md-3 p-b-15">
-                                    <span class="property-info-icon icon-bed">
-                                        <img src="assets/img/icon/cars-orange.png">
-                                    </span>
+                                    {{-- <span class="property-info-icon icon-bed"> --}}
+                                        <h2>Địa chỉ</h2>
+                                    {{-- </span> --}}
                                     <span class="property-info-entry">
-                                        <span class="property-info-label">GARA</span>
-                                        <span class="property-info-value">1</span>
+                                        <span class="property-info-label">{{$detail[0]->tinh}},{{$detail[0]->huyen}},{{$detail[0]->xa}}</span>
+                                       
                                     </span>
                                 </div>
 
-                                <div class="col-xs-6 col-sm-3 col-md-3 p-b-15">
+                                {{-- <div class="col-xs-6 col-sm-3 col-md-3 p-b-15">
                                     <span class="property-info-icon icon-bath">
-                                        <img src="assets/img/icon/os-orange.png">
+                                        <img src="{{asset('')}}assets/img/icon/os-orange.png">
                                     </span>
                                     <span class="property-info-entry">
                                         <span class="property-info-label">PHÒNG TẮM</span>
                                         <span class="property-info-value">2<b class="property-info-unit">M</b></span>
                                     </span>
-                                </div>
+                                </div> --}}
                             </div>
                             <!-- .property-meta -->
 
                             <div class="section">
                                 <h4 class="s-property-title">Miêu tả</h4>
                                 <div class="s-property-content">
-                                    <p>🔥🔥Đón đầu làn sóng đầu tư BĐS Gia Lai năm 2021 💥 Vị trí vàng nằm ngay khu trung hành chính mới, mặt tiền đường Trần Hưng Đạo 35m 💥 Cơ sở hạ tầng đồng bộ, chuẩn đô thị hiện đại. 💥Cách Tp PleiKu 10p và sân bay Pleiku chỉ 15p. 💥Xung quanh được xây dựng UBND Huyện, Sở ban ngành, Trường học các cấp, Thương mại, Thể thao và hệ thống công viên cây xanh. 💥Hạ tầng được quy hoạch hiện đại mặt tiền đường lên tới 35m. 🔰 Kế nối du lịch nhanh chóng: sân Golf, Đồi cỏ Hồng, Sân bay Pleiku, Biển Hồ, Núi lửa Chư Đăng Ya.... 🔰 Giai đoạn 1, giá đầu tư tốt, lợi nhuận cao ⚡️⚡️Đặt biệt: Bảng hàng đợt 1 - giá F0 chỉ 9tr/m2. *✨Tiến độ thanh toán dàn trải 11 đợt - Ngân hàng hỗ trợ lên tới 70% Lãi suất 0% trong 18 tháng</p>
+                                    <p>{{$detail[0]->descriptions}}</p>
                                 </div>
                             </div>
                             <!-- End description area  -->
-                           <div id="map"></div>
+                           {{-- <div id="map"></div>
+                            --}}
+                            <div id="map">
+
+                            </div>
+                            <script
+                        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKHLBgd9aVkhm4QqTgd2267j6DSLW7he8&callback=initMap&libraries=&v=weekly"
+                        async></script>
                             <div class="section property-share"> 
                                 <h4 class="s-property-title">Chia sẻ với bạn bè </h4> 
                                 <div class="roperty-social">
                                     <ul> 
-                                        <li><a title="Share this on dribbble " href="#"><img src="assets/img/social_big/dribbble_grey.png"></a></li>                                         
-                                        <li><a title="Share this on facebok " href="#"><img src="assets/img/social_big/facebook_grey.png"></a></li> 
-                                        <li><a title="Share this on delicious " href="#"><img src="assets/img/social_big/delicious_grey.png"></a></li> 
-                                        <li><a title="Share this on tumblr " href="#"><img src="assets/img/social_big/tumblr_grey.png"></a></li> 
-                                        <li><a title="Share this on digg " href="#"><img src="assets/img/social_big/digg_grey.png"></a></li> 
-                                        <li><a title="Share this on twitter " href="#"><img src="assets/img/social_big/twitter_grey.png"></a></li> 
-                                        <li><a title="Share this on linkedin " href="#"><img src="assets/img/social_big/linkedin_grey.png"></a></li>                                        
+                                        <li><a title="Share this on dribbble " href="#"><img src="{{asset('')}}assets/img/social_big/dribbble_grey.png"></a></li>                                         
+                                        <li><a title="Share this on facebok " href="#"><img src="{{asset('')}}assets/img/social_big/facebook_grey.png"></a></li> 
+                                        <li><a title="Share this on delicious " href="#"><img src="{{asset('')}}assets/img/social_big/delicious_grey.png"></a></li> 
+                                        <li><a title="Share this on tumblr " href="#"><img src="{{asset('')}}assets/img/social_big/tumblr_grey.png"></a></li> 
+                                        <li><a title="Share this on digg " href="#"><img src="{{asset('')}}assets/img/social_big/digg_grey.png"></a></li> 
+                                        <li><a title="Share this on twitter " href="#"><img src="{{asset('')}}assets/img/social_big/twitter_grey.png"></a></li> 
+                                        <li><a title="Share this on linkedin " href="#"><img src="{{asset('')}}assets/img/social_big/linkedin_grey.png"></a></li>                                        
                                     </ul>
                                 </div>
                             </div>
@@ -250,13 +290,13 @@
                                         <div class="clear">
                                             <div class="col-xs-4 col-sm-4 dealer-face">
                                                 <a href="">
-                                                    <img src="assets/img/client-face1.png" class="img-circle">
+                                                    <img src="{{$detail[0]->images}}" class="img-circle">
                                                 </a>
                                             </div>
                                             <div class="col-xs-8 col-sm-8 ">
                                                 <h3 class="dealer-name">
                                                     <a href="">Đại lý biệt thự</a>
-                                                    <span>Bất động sản MiCy</span>        
+                                                    <span>{{$detail[0]->nameUser}} </span>        
                                                 </h3>
                                                 <div class="dealer-social-media">
                                                     <a class="twitter" target="_blank" href="">
@@ -281,9 +321,9 @@
 
                                         <div class="clear">
                                             <ul class="dealer-contacts">                                       
-                                                <li><i class="pe-7s-map-marker strong"> </i>30 - Lê Duẩn - Vinh</li>
-                                                <li><i class="pe-7s-mail strong"> </i> email@email.com</li>
-                                                <li><i class="pe-7s-call strong"> </i> +1 908 967 5906</li>
+                                                {{-- <li><i class="pe-7s-map-marker strong"> </i>30 - Lê Duẩn - Vinh</li> --}}
+                                                <li><i class="pe-7s-mail strong"> </i> {{$detail[0]->email}}</li>
+                                                <li><i class="pe-7s-call strong"> </i> {{$detail[0]->phone_number}}</li>
                                             </ul>
                                             <p>Liên hệ với chúng tôi để biết thêm chi tiết…</p>
                                         </div>
@@ -464,27 +504,27 @@
             </div>
         </div>
           
+        @include('template/script')
         
-        
-        <script src="assets/js/vendor/modernizr-2.6.2.min.js"></script>
-        <script src="assets/js/jquery-1.10.2.min.js"></script>
-        <script src="bootstrap/js/bootstrap.min.js"></script>
-        <script src="assets/js/bootstrap-select.min.js"></script>
-        <script src="assets/js/bootstrap-hover-dropdown.js"></script>
-        <script src="assets/js/easypiechart.min.js"></script>
-        <script src="assets/js/jquery.easypiechart.min.js"></script>
-        <script src="assets/js/owl.carousel.min.js"></script>
-        <script src="assets/js/wow.js"></script>
-        <script src="assets/js/icheck.min.js"></script>
-        <script src="assets/js/price-range.js"></script>
-        <script type="text/javascript" src="assets/js/lightslider.min.js"></script>
-        <script src="assets/js/main.js"></script>
+        <script src="{{asset('')}}assets/js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="{{asset('')}}assets/js/jquery-1.10.2.min.js"></script>
+        <script src="{{asset('')}}bootstrap/js/bootstrap.min.js"></script>
+        <script src="{{asset('')}}assets/js/bootstrap-select.min.js"></script>
+        <script src="{{asset('')}}assets/js/bootstrap-hover-dropdown.js"></script>
+        <script src="{{asset('')}}assets/js/easypiechart.min.js"></script>
+        <script src="{{asset('')}}assets/js/jquery.easypiechart.min.js"></script>
+        <script src="{{asset('')}}assets/js/owl.carousel.min.js"></script>
+        <script src="{{asset('')}}assets/js/wow.js"></script>
+        <script src="{{asset('')}}assets/js/icheck.min.js"></script>
+        <script src="{{asset('')}}assets/js/price-range.js"></script>
+        <script type="text/javascript" src="{{asset('')}}assets/js/lightslider.min.js"></script>
+        <script src="{{asset('')}}assets/js/main.js"></script>
 
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
-        <script src="assets/js/gmaps.js"></script>        
-        <script src="assets/js/gmaps.init.js"></script>
+        {{-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script> --}}
+        {{-- <script src="{{asset('')}}assets/js/gmaps.js"></script>        
+        <script src="{{asset('')}}assets/js/gmaps.init.js"></script> --}}
 
-        <script src="assets/js/main.js"></script>
+        <script src="{{asset('')}}assets/js/main.js"></script>
 
         <script>
             $(document).ready(function () {
