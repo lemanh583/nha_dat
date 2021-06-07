@@ -28,6 +28,11 @@ Route::post('/updateDetailUser','IndexController@updateDetailUser')->name('updat
 Route::get('/viewProfile','IndexController@viewProfile')->name('viewProfile')->middleware('auth');
 Route::post('/updateUserIndex','UserController@updateUser')->name('updateUserIndex')->middleware('auth');
 Route::get('details/{id}','IndexController@details')->name('details');
+Route::get('/ajax','DetailController@ajax')->name('ajax');
+Route::get('/ajaxVilages','DetailController@ajaxVilages')->name('ajaxVilages');
+Route::get('/searchct','IndexController@searchIndexCT')->name('searchIndexCT');
+Route::get('/-{title}','IndexController@redirectMenu')->name('redirectMenu');
+
 
 
 Route::get('/login','LogRegController@showformLogin')->name('login');
@@ -52,8 +57,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth','checkadmin']],functi
     //hiên thị danh sách bài viết
     Route::get('/showlistDetail','DetailController@showlistDetail')->name('showlistDetail');
     Route::get('/viewDetail/{id}','DetailController@viewDetail')->name('viewDetail');
-    Route::get('/ajax','DetailController@ajax')->name('ajax');
-    Route::get('/ajaxVilages','DetailController@ajaxVilages')->name('ajaxVilages');
+    
     Route::get('showAddDetail','DetailController@showAddDetail')->name('showAddDetail');
     Route::post('addDetail','DetailController@addDetail')->name('addDetail');
     Route::get('/editDetail/{id}','DetailController@editDetail')->name('editDetail');

@@ -12,11 +12,14 @@ use App\detail;
 use Auth;
 use App\User;
 use App\images;
+use App\types;
+use App\provinces;
 
 class IndexController extends Controller
 {
     public function index()
     {
+        
         $listDetail = DB::table('provinces')
                             ->join('districts','provinces.id_pro','=','districts.id_pro')
                             ->join('villages','districts.id_dis','=','villages.id_dis')
@@ -31,7 +34,7 @@ class IndexController extends Controller
                                         'types.name as nameType',
                                         'details.title as titledt',
                                         'details.area',
-                                        'details.amount',
+                                        DB::raw("FORMAT (details.amount,0) as amount"),
                                         'provinces.name as tinh',
                                         'districts.name as huyen',
                                         'villages.name as xa',
@@ -41,10 +44,11 @@ class IndexController extends Controller
                                     )
                             ->groupBy('details.id_detail')        
                             ->paginate(10);
-        
+        $types = types::all();
         $categories = DB::table('categories')->get();
+        $provinces = provinces::all();
                             // dd($listDetail);
-        return view('template.index',compact('listDetail','categories'));
+        return view('template.index',compact('listDetail','categories','types','provinces'));
     }
 
 
@@ -67,17 +71,22 @@ class IndexController extends Controller
                                         'types.name as nameType',
                                         'details.title as titledt',
                                         'details.area',
-                                        'details.amount',
+                                        DB::raw("FORMAT (details.amount,0) as amount"),
                                         'provinces.name as tinh',
                                         'districts.name as huyen',
                                         'villages.name as xa',
                                         'images.url',
-                                        'details.id_detail'
+                                        'details.id_detail',
+                                        'details.created_at'
                                     )
+                        
                             ->groupBy('details.id_detail')        
                             ->paginate(10);
         // dd($listDetail);
-        return view('template.index',compact('listDetail'));
+        $types = types::all();
+        $provinces = provinces::all();
+        $categories = DB::table('categories')->get();
+        return view('template.index',compact('listDetail','categories','provinces','types'));
     }
 
     public function showAddDetailUser(){
@@ -88,18 +97,18 @@ class IndexController extends Controller
         return view('template.formAddDetailUser',compact('provinces','types','categories'));
     }
 
-    public function ajaxIndex(Request $request){
-        $req = $request->get('name');
-        $districts = districts::all()->where('id_pro','=',$req);
-        // $villages = villages::all()->where('id_dis','=',$districts->id_dis);
-        return response()->json(compact('districts'), 200);
-    }
+    // public function ajaxIndex(Request $request){
+    //     $req = $request->get('name');
+    //     $districts = districts::all()->where('id_pro','=',$req);
+    //     // $villages = villages::all()->where('id_dis','=',$districts->id_dis);
+    //     return response()->json(compact('districts'), 200);
+    // }
 
-    public function ajaxVilagesIndex(Request $request){
-        $req = $request->get('name');
-        $villages = villages::all()->where('id_dis','=',$req);
-        return response()->json(compact('villages'), 200);
-    }
+    // public function ajaxVilagesIndex(Request $request){
+    //     $req = $request->get('name');
+    //     $villages = villages::all()->where('id_dis','=',$req);
+    //     return response()->json(compact('villages'), 200);
+    // }
     
 
     public function addDetailIndex(Request $request){
@@ -197,7 +206,7 @@ class IndexController extends Controller
                                         'details.title',
                                         'details.descriptions',
                                         'details.area',
-                                        'details.amount',
+                                        DB::raw("FORMAT (details.amount,0) as amount"),
                                         'provinces.name as tinh',
                                         'districts.name as huyen',
                                         'villages.name as xa',
@@ -356,7 +365,7 @@ class IndexController extends Controller
                                     'details.title',
                                     'details.descriptions',
                                     'details.area',
-                                    'details.amount',
+                                    DB::raw("FORMAT (details.amount,0) as amount"),
                                     'provinces.name as tinh',
                                     'districts.name as huyen',
                                     'villages.name as xa',
@@ -381,5 +390,115 @@ class IndexController extends Controller
 
         // return view('template.details');
     }
+
    
+
+    public function searchIndexCT(Request $request)
+    {
+        // dd($request->all());
+        // ini_set('memory_limit','-1');
+        $listDetail = DB::table('provinces')
+                            ->join('districts','provinces.id_pro','=','districts.id_pro')
+                            ->join('villages','districts.id_dis','=','villages.id_dis')
+                            ->join('maps','villages.id_vil','=','maps.id_vil')
+                            ->join('details','maps.id_map','=','details.id_map')
+                            ->join('types','details.id_type','=','types.id_type')
+                            ->join('categories','details.id_category','=','categories.id_category')
+                            ->join('images','details.id_detail','=','images.id_detail')
+                            ->join('users','details.id','=','users.id')
+                            ->select('users.name as nameUser',
+                                        'categories.name as nameCategory',
+                                        'types.name as nameType',
+                                        'details.title as titledt',
+                                        'details.area',
+                                        // 'amount',
+                                        DB::raw("FORMAT (details.amount,0) as amount"),
+                                        'provinces.name as tinh',
+                                        'districts.name as huyen',
+                                        'villages.name as xa',
+                                        'images.url',
+                                        'details.id_detail',
+                                        'details.created_at'
+                                    )
+                            ->groupBy('details.id_detail');        
+
+        if($request->filled('search')){
+            $listDetail->where('details.title','LIKE', '%'.$request->input('search').'%');
+        }
+        if($request->filled('amount')){
+           
+            $listDetail->where([['details.amount','>=',$request->input('amount')[0].'000000000'],
+                                ['details.amount','<=',$request->input('amount')[2].'000000000'],
+                            ]);
+                            // ini_set('memory_limit', '-1');
+                            // print_r($listDetail);
+                            // dd(DB::getQueryLog());
+                        // ->where('details.amount','<=',$request->input('amount')[2].'000000000');
+        }
+        if($request->filled('area')){
+            $listDetail->where('details.area','>=',$request->input('area')[0].'00')
+                        ->where('details.area','<=',$request->input('area')[2].'00') ;
+                        // dd($listDetail);
+        }
+        if($request->filled('provinces')){
+            $listDetail->where('provinces.id_pro','=',$request->input('provinces'));
+        }
+        if($request->filled('districts')){
+            $listDetail->where('districts.id_dis','=',$request->input('districts'));
+        }
+        if($request->filled('villages')){
+            $listDetail->where('villages.id_vil','=',$request->input('villages'));
+        }
+        if($request->filled('types')){
+            $listDetail->where('types.id_type','=',$request->input('types'));
+        }
+        if($request->filled('categories')){
+            $listDetail->where('categories.id_category','=',$request->input('categories'));
+        }
+
+        // dd($listDetail->paginate(10));
+        $listDetail = $listDetail->paginate(10);
+        $types = types::all();
+        $provinces = provinces::all();
+        $categories = DB::table('categories')->get();
+        return view('template.index',compact('listDetail','categories','types','provinces'));
+        
+    }
+   
+
+    public function redirectMenu($title)
+    {
+
+        $listDetail = DB::table('provinces')
+                            ->join('districts','provinces.id_pro','=','districts.id_pro')
+                            ->join('villages','districts.id_dis','=','villages.id_dis')
+                            ->join('maps','villages.id_vil','=','maps.id_vil')
+                            ->join('details','maps.id_map','=','details.id_map')
+                            ->join('types','details.id_type','=','types.id_type')
+                            ->join('categories','details.id_category','=','categories.id_category')
+                            ->join('images','details.id_detail','=','images.id_detail')
+                            ->join('users','details.id','=','users.id')
+                            ->where('categories.title','=',$title)
+                            ->select('users.name as nameUser',
+                                        'categories.name as nameCategory',
+                                        'types.name as nameType',
+                                        'details.title as titledt',
+                                        'details.area',
+                                        DB::raw("FORMAT (details.amount,0) as amount"),
+                                        'provinces.name as tinh',
+                                        'districts.name as huyen',
+                                        'villages.name as xa',
+                                        'images.url',
+                                        'details.id_detail',
+                                        'details.created_at'
+                                    )
+                            ->groupBy('details.id_detail')        
+                            ->paginate(10);
+        $active = "active";
+        $types = types::all();
+        $provinces = provinces::all();
+        $categories = DB::table('categories')->get();
+        return view('template.index',compact('listDetail','categories','types','provinces','active'));
+    }
+
 }

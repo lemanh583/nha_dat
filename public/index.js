@@ -36,7 +36,7 @@ $('#provinces').change(function(){
             let arr = response.districts;
             // let mang = response.villages;
             $("#districts").empty();
-            $("#districts").append(`<option>Chọn huyện</option>`);
+            $("#districts").append(`<option value="">Chọn huyện</option>`);
             $.each(arr, function(index,value){
                 $("#districts").append(`<option value='${value.id_dis}'>${value.name}</option>`);
             }); 
@@ -66,7 +66,7 @@ $('#districts').change(function(){
             // console.log(response.villages);
             let arr = response.villages;
             $("#villages").empty();
-            $("#villages").append(`<option>Chọn xã</option>`);
+            $("#villages").append(`<option value="">Chọn xã</option>`);
             $.each(arr, function(index,value){
                 $("#villages").append(`<option value='${value.id_vil}'>${value.name}</option>`);
             }); 

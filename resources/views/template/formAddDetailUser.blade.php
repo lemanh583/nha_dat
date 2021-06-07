@@ -49,7 +49,7 @@
            <!-- /.form-group -->
            <div class="form-group">
             <label>Tỉnh/Thành phố</label>
-            <select class="form-control select2" name="province" style="width: 100%;" id="provinces" url="{{route('ajaxIndex')}}">
+            <select class="form-control select2" name="province" style="width: 100%;" id="provinces" url="{{route('ajax')}}">
                 <option>Chọn Tỉnh</option>
                 @foreach($provinces as $province)
                  <option value="{{$province->id_pro}}">{{$province->name}}</option> 
@@ -60,7 +60,7 @@
 
           <div class="form-group">
             <label>Huyện/Phường</label>
-            <select class="form-control select2" name="district" id="districts" style="width: 100%;" url="{{route('ajaxVilagesIndex')}}">               
+            <select class="form-control select2" name="district" id="districts" style="width: 100%;" url="{{route('ajaxVilages')}}">               
                <option >Chọn huyện</option>
             </select>
           </div>

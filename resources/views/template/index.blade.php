@@ -91,13 +91,41 @@
                         @endif
                         </div>
                     <ul class="main-nav nav navbar-nav navbar-right">
-                        <li class="wow fadeInDown " data-wow-delay="0.1s"><a class="active" href="{{route('home')}}">Home</a></li>
+                        <li class="wow fadeInDown " data-wow-delay="0.1s"><a class="menuhome" href="{{route('home')}}">Home</a></li>
 
-                        {{-- @foreach($categories as $ct)
+                        @foreach($categories as $ct)
 
-                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="" href="">{{$ct->name}}</a></li>
+                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="menu" href="{{route('redirectMenu',$ct->title)}}">{{$ct->name}}</a></li>
                         @endforeach
-                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a >||</a></li> --}}
+                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a >||</a></li>
+                        <script>
+                            
+
+                            let menu = document.querySelectorAll('.menu');
+                            let menuhome = document.querySelector('.menuhome');
+                            let url = location.href;
+                            if(url === "http://127.0.0.1:8000/"){
+                                menuhome.classList.add('active');
+                            }
+                            for(let i = 0 ; i < menu.length;i++){
+                                if(url === menu[i].getAttribute('href')){
+                                    menu[i].classList.add('active');
+                                }
+                            }
+
+
+
+
+                            // for(let i = 0 ; i < menu.length ; i++){
+                            //     this.onclick = () =>{
+                            //        for(let j = 0 ; j < menu.length; j++){
+                            //            menu[j].classList.remove('active');
+                            //        }
+                            //        this.classList.add('active');
+                            //     }
+                            // }
+                            
+                        </script>
 
                         {{-- <li class="dropdown ymm-sw " data-wow-delay="0.1s">
                             <a href="index.html" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Dự án <b class="caret"></b></a>
@@ -155,11 +183,11 @@
                         <h2>Tìm kiếm nhà đất</h2>
                         <div class="search-form wow pulse" data-wow-delay="0.8s">
 
-                            <form action="{{route('searchIndex')}}" class=" form-inline">
-                                <button class="btn  toggle-btn" type="button"><i class="fa fa-bars"></i></button>
+                            <form action="{{route('searchIndex')}}" class=" form-inline" id="form">
+                                <button class="btn  toggle-btn" id ="click" type="button"><i class="fa fa-bars"></i></button>
 
                                 <div class="form-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm">
+                                    <input type="text" name="search" class="form-control search" placeholder="Tìm kiếm">
                                 </div>
                                 <!-- <div class="form-group">                                   
                                     <select id="lunchBegins" class="selectpicker" data-live-search="true" data-live-search-style="begins" title="Chọn thành phố">
@@ -176,54 +204,72 @@
                                         <option>Hà Tĩnh</option>
                                     </select>
                                 </div> -->
-                                <button class="btn search-btn" type="submit"><i class="fa fa-search"></i></button>
+                                <button class="btn search-btn submit" type="submit"><i class="fa fa-search"></i></button>
 
                                 <div style="display: none;" class="search-toggle">
 
                                     <div class="search-row">   
+                                        <div class="form-group">
+                                            
+                                                <select class="form-control" name="amount" id="">
+                                                    <option value="">Chọn mức giá</option>
+                                                    <option value="0,3">Dưới 3 tỷ</option>
+                                                    <option value="3,7">Từ 3 đến 7 tỷ</option>
+                                                    <option value="7,100">7 tỷ trở lên</option>
+                                                </select>
+                                            
+                                        </div>
 
-                                        <div class="form-group mar-r-20">
+                                        <div class="form-group">
+                                            
+                                                <select name="area" id="" class="form-control">
+                                                    <option value="">Chọn Diện tích</option>
+                                                    <option value="0,2">Dưới 200m2</option>
+                                                    <option value="2,5">Từ 200m2 đến 500m2</option>
+                                                    <option value="5,100">500m2 trở lên</option>
+                                                </select>
+                                            
+                                        </div>
+                                        {{-- <div class="form-group mar-r-20">
                                             <label for="price-range">Giá tiền(tỷ): </label>
                                             <input type="text" class="span2" value="" data-slider-min="0" 
                                                    data-slider-max="50" data-slider-step="2" 
-                                                   data-slider-value="[0,20]" id="price-range" ><br />
+                                                   data-slider-value="[0,20]" id="price-range" name="price-range"><br />
                                             <b class="pull-left color">0</b> 
                                             <b class="pull-right color">50</b>
-                                        </div>
+                                        </div> --}}
                                         <!-- End of  -->  
 
-                                        <div class="form-group mar-l-20">
+                                        {{-- <div class="form-group mar-l-20">
                                             <label for="property-geo">Diện tích (m2) :</label>
                                             <input type="text" class="span2" value="" data-slider-min="0" 
                                                    data-slider-max="600" data-slider-step="5" 
-                                                   data-slider-value="[50,450]" id="property-geo" ><br />
+                                                   data-slider-value="[50,450]" id="property-geo" name="property-geo"><br />
                                             <b class="pull-left color">40m</b> 
                                             <b class="pull-right color">12000m</b>
-                                        </div>
+                                        </div> --}}
                                         <!-- End of  --> 
                                     </div>
 
                                     <div class="search-row">
                                         <div class="form-group">                                     
-                                            <select  class="form-control" >
-                                                <option>Tỉnh</option>
-                                                <option>Nghệ An</option>
-                                                <option>Hà Tĩnh</option>
+                                            <select  class="form-control" id="provinces" url="{{route('ajax')}}" name="provinces">
+                                                <option value="">Tỉnh</option>
+                                               @foreach ($provinces as $item)
+                                                    <option value={{$item->id_pro}}>{{$item->name}}</option>
+                                               @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group">                                     
-                                            <select class="form-control" >
-                                                <option>Tỉnh</option>
-                                                <option>Nghệ An</option>
-                                                <option>Hà Tĩnh</option>
+                                            <select class="form-control" id="districts"  url="{{route('ajaxVilages')}}" name="districts">
+                                                <option value="">Huyện</option>
+                                              
                                             </select>
                                         </div> 
                                         <div class="form-group">                                     
-                                            <select class="form-control" >
-                                                <option>Tỉnh</option>
-                                                <option>Nghệ An</option>
-                                                <option>Hà Tĩnh</option>
-                                                <option>Hà Tĩnh</option>
+                                            <select class="form-control" id="villages" name="villages">
+                                                <option value="">Xã</option>
+                                               
                                             </select>
                                         </div>
                                         
@@ -232,19 +278,19 @@
                                     <br>
                                     <div class="search-row">  
                                         <div class="form-group">                                     
-                                            <select class="form-control" >
-                                                <option>Tỉnh</option>
-                                                <option>Nghệ An</option>
-                                                <option>Hà Tĩnh</option>
-                                                <option>Hà Tĩnh</option>
+                                            <select class="form-control"  name="types">
+                                                <option value="">Loại</option>
+                                                @foreach ($types as $item)
+                                                    <option value={{$item->id_type}}>{{$item->name}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group">                                     
-                                            <select class="form-control" >
-                                                <option>Tỉnh</option>
-                                                <option>Nghệ An</option>
-                                                <option>Hà Tĩnh</option>
-                                                <option>Hà Tĩnh</option>
+                                            <select class="form-control" name="categories" >
+                                                <option value="">Kiểu</option>
+                                                @foreach ($categories as $item)
+                                                    <option value={{$item->id_category}}>{{$item->name}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                        
@@ -261,7 +307,27 @@
                                     </div>   
 
                                 </div>                     
-
+                                <script>
+                                    let click = document.getElementById('click');
+                                    let form  = document.querySelector('#form');
+                                    let submit = document.querySelector('#submit');
+                                    let s = 1;
+                                    click.onclick = function(){
+                                        if(s === 1){
+                                            form.setAttribute('action',@json(route('searchIndexCT')));
+                                            s = 2;             
+                                        }
+                                        else{
+                                            form.setAttribute('action',@json(route('searchIndex')));
+                                            s = 1;
+                                        }
+                                    }
+                                    submit.onclick = function() {
+                                        form.setAttribute('action',@json(route('searchIndex')));
+                                    }
+                                  
+                                    
+                                </script>
                             </form>
                         </div>
                     </div>
@@ -515,7 +581,7 @@
         <script src="{{asset('')}}assets/js/price-range.js"></script>
 
         <script src="{{asset('')}}assets/js/main.js"></script>
-       
+       <script src={{asset('index.js')}}></script>
        
     </body>
 </html>
