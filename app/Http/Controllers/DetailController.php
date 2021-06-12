@@ -243,7 +243,7 @@ class DetailController extends Controller
             
             //lấy idmap mới thêm
             $id_map = DB::table('maps')->select(DB::raw('MAX(id_map) as idMax'))->get();
-            dd($id_map);
+            // dd($id_map);
             // dd()
 
             //thêm bảng detail
