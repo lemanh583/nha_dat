@@ -206,14 +206,22 @@
                 </tr>
               </thead>
               <tbody>
+                @if($countImg > 0)
                 @foreach($detail as $a)
+                {{-- @isset($a->id_img) --}}
                 <tr>
                   {{-- <th scope="row">{{$a->id_img}}</th> --}}
                   {{-- <td>{{$a->url}}</td> --}}
                   <td><img src="{{asset($a->url)}}" alt="" height="100px" width="200px"></td>
-                  <td><button class="btn btn-success xoaimg" url-data="{{route('deleteImgAjax',$a->id_img)}}" type ="button">Xoá</button></td>
+                  @if($countImg == 1)
+                  <td><button class="btn btn-success xoaimg" url-data="{{route('deleteImgAjax',$a->id_img)}}" type ="button" disabled>Xoá</button></td>      
+                  @else
+                  <td><button class="btn btn-success xoaimg" url-data="{{route('deleteImgAjax',$a->id_img)}}" type ="button" >Xoá</button></td>
+                  @endif
                 </tr>
+                {{-- @endisset --}}
                 @endforeach
+                @endif
               </tbody>
             </table>
           </div>

@@ -32,9 +32,12 @@ class DetailController extends Controller
                                         'types.name as nameType',
                                         // 'details.title',
                                         'details.id_detail',
-                                        DB::raw("substr(details.title,1,15) as des ")
+                                        DB::raw("substr(details.title,1,15) as des "),
+                                        'details.created_at',
+                                        'details.views'
                                     )
-                            ->groupBy('details.id_detail')        
+                            ->groupBy('details.id_detail')
+                            ->orderBy('id_detail','DESC')        
                             ->paginate(10);
         return view('admin.detail',compact('listDetail'));
         // dd($listDetail);
@@ -126,13 +129,14 @@ class DetailController extends Controller
         $coordiantes = explode(',',  $data);
         $lat = $coordiantes[0];
         $lng = $coordiantes[1];
-         $Types = DB::table('types')->get();
+        $countImg = images::where('id_detail','=',$id)->count();
+        $Types = DB::table('types')->get();
         $categories = DB::table('categories')->get();
         $provinces = DB::table('provinces')->get();
         $districts = DB::table('districts')->where('districts.id_pro','=',$detail[0]->id_pro)->get();
         $villages = DB::table('villages')->where('villages.id_dis','=',$detail[0]->id_dis)->get();  
         return view('admin.updateDetail',compact('detail','Types','categories','provinces',
-                                'districts','villages','lat','lng'
+                                'districts','villages','lat','lng','countImg'
                     ));
 
     }
@@ -147,6 +151,8 @@ class DetailController extends Controller
         $amount = $request->input('amount');
         $mota = $request->input('mota');
         $toa_do = $request->input('toa_do');
+        $villages = $request->input('village');
+
 
         if($request->hasFile('file')){
             $detail = detail::find($id);
@@ -182,6 +188,7 @@ class DetailController extends Controller
     
             $map = maps::find($detail->id_map);
             $map->coordinates =  $toa_do;
+            $map->id_vil = $villages;
             $map->save();
         }
         return redirect()->route('showlistDetail')->with('message','Sửa thành công');

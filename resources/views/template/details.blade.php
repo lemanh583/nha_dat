@@ -35,6 +35,8 @@
         <link rel="stylesheet" href="{{asset('')}}assets/css/lightslider.min.css">
         <link rel="stylesheet" href="{{asset('')}}assets/css/style.css">
         <link rel="stylesheet" href="{{asset('')}}assets/css/responsive.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        
     </head>
     <body>
 
@@ -43,7 +45,7 @@
         </div>
         <!-- Body content -->
 
-        <div class="header-connect">
+        {{-- <div class="header-connect">
             <div class="container">
                 <div class="row">
                     <div class="col-md-5 col-sm-8  col-xs-12">
@@ -68,7 +70,7 @@
                     </div>
                 </div>
             </div>
-        </div>              
+        </div>               --}}
         <!--End top header -->
 
         <nav class="navbar navbar-default ">
@@ -87,12 +89,29 @@
                         @endif
                     </div>
                     <ul class="main-nav nav navbar-nav navbar-right">
-                        <li class="wow fadeInDown " data-wow-delay="0.1s"><a class="active" href="{{route('home')}}">Home</a></li>
+                        <li class="wow fadeInDown " data-wow-delay="0.1s"><a class="menuhome" href="{{route('home')}}">Home</a></li>
+
                         @foreach($categories as $ct)
 
-                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="" href="">{{$ct->name}}</a></li>
+                        <li class="wow fadeInDown" data-wow-delay="0.1s"><a class="menu" href="{{route('redirectMenu',$ct->title)}}">{{$ct->name}}</a></li>
                         @endforeach
                         <li class="wow fadeInDown" data-wow-delay="0.1s"><a >||</a></li>
+                        <script>
+                            
+
+                            let menu = document.querySelectorAll('.menu');
+                            let menuhome = document.querySelector('.menuhome');
+                            let url = location.href;
+                            if(url === "http://127.0.0.1:8000/"){
+                                menuhome.classList.add('active');
+                            }
+                            for(let i = 0 ; i < menu.length;i++){
+                                if(url === menu[i].getAttribute('href')){
+                                    menu[i].classList.add('active');
+                                }
+                            }
+
+                        </script>
                         {{-- <li class="dropdown ymm-sw " data-wow-delay="0.1s">
                             <a href="index.html" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Dự án <b class="caret"></b></a>
                             <ul class="dropdown-menu navbar-nav">
@@ -135,7 +154,7 @@
             <div class="container">
                 <div class="row">
                     <div class="page-head-content">
-                        <h1 class="page-title">Biệt thự </h1>               
+                        <h1 class="page-title">{{$detail[0]->nameCategory}} </h1>               
                     </div>
                 </div>
             </div>
@@ -261,6 +280,23 @@
                             <script
                         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKHLBgd9aVkhm4QqTgd2267j6DSLW7he8&callback=initMap&libraries=&v=weekly"
                         async></script>
+                        <script>
+                            // Initialize and add the map
+                            function initMap() {
+                              // The location of Ulur
+                              const uluru = { lat: Number(@json($lat)), lng: Number(@json($lng)) };
+                              // The map, centered at Uluru
+                              const map = new google.maps.Map(document.getElementById("map"), {
+                                zoom: 10,
+                                center: uluru,
+                              });
+                              // The marker, positioned at Uluru
+                              const marker = new google.maps.Marker({
+                                position: uluru,
+                                map: map,
+                              });
+                            }
+                        </script>
                             <div class="section property-share"> 
                                 <h4 class="s-property-title">Chia sẻ với bạn bè </h4> 
                                 <div class="roperty-social">
@@ -334,63 +370,26 @@
 
                             <div class="panel panel-default sidebar-menu similar-property-wdg wow fadeInRight animated">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">Tương tự</h3>
+                                    <h3 class="panel-title">Cùng loại xem nhiều</h3>
                                 </div>
                                 <div class="panel-body recent-property-widget">
                                         <ul>
+                                            @foreach($listView as $lv)
                                         <li>
-                                            <div class="col-md-3 col-sm-3 col-xs-3 blg-thumb p0">
+                                            {{-- <div class="col-md-3 col-sm-3 col-xs-3 blg-thumb p0">
                                                 <a href="single.html"><img src="assets/img/demo/small-property-2.jpg"></a>
                                                 <span class="property-seeker">
                                                     <b class="b-1">A</b>
                                                     <b class="b-2">S</b>
                                                 </span>
-                                            </div>
-                                            <div class="col-md-8 col-sm-8 col-xs-8 blg-entry">
-                                                <h6> <a href="single.html">Biệt thự</a></h6>
-                                                <span class="property-price">300000 đ</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="col-md-3 col-sm-3 col-xs-3 blg-thumb p0">
-                                                <a href="single.html"><img src="assets/img/demo/small-property-2.jpg"></a>
-                                                <span class="property-seeker">
-                                                    <b class="b-1">A</b>
-                                                    <b class="b-2">S</b>
-                                                </span>
-                                            </div>
-                                            <div class="col-md-8 col-sm-8 col-xs-8 blg-entry">
-                                                <h6> <a href="single.html">Biệt thự</a></h6>
-                                                <span class="property-price">300000 đ</span>
+                                            </div> --}}
+                                            <div class="col-md-12 col-sm-12 col-xs-12 blg-entry">
+                                                <h6> <a href="{{route('details',$lv->id_detail)}}">{{$lv->title}}</a></h6>
+                                                <span class="property-price">{{$lv->amount}}đ</span>
+                                                <span class="pull-right">{{$lv->views}}  <i class="fas fa-eye"></i></span>
                                             </div>
                                         </li>
-                                        <li>
-                                            <div class="col-md-3 col-sm-3 col-xs-3 blg-thumb p0">
-                                                <a href="single.html"><img src="assets/img/demo/small-property-2.jpg"></a>
-                                                <span class="property-seeker">
-                                                    <b class="b-1">A</b>
-                                                    <b class="b-2">S</b>
-                                                </span>
-                                            </div>
-                                            <div class="col-md-8 col-sm-8 col-xs-8 blg-entry">
-                                                <h6> <a href="single.html">Biệt thự</a></h6>
-                                                <span class="property-price">300000 đ</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="col-md-3 col-sm-3 col-xs-3 blg-thumb p0">
-                                                <a href="single.html"><img src="assets/img/demo/small-property-2.jpg"></a>
-                                                <span class="property-seeker">
-                                                    <b class="b-1">A</b>
-                                                    <b class="b-2">S</b>
-                                                </span>
-                                            </div>
-                                            <div class="col-md-8 col-sm-8 col-xs-8 blg-entry">
-                                                <h6> <a href="single.html">Biệt thự</a></h6>
-                                                <span class="property-price">300000 đ</span>
-                                            </div>
-                                        </li>
-
+                                        @endforeach
                                     </ul>
                                 </div>
                             </div>  
@@ -424,51 +423,22 @@
                         </div>
                         <div class="col-md-3 col-sm-6 wow fadeInRight animated">
                             <div class="single-footer">
-                                <h4>Tin mới</h4>
+                                <h4>Xem nhiều</h4>
                                 <div class="footer-title-line"></div>
                                 <ul class="footer-blog">
+                                    @foreach($listViewAll as $lw)
+                                    
                                     <li>
-                                        <div class="col-md-3 col-sm-4 col-xs-4 blg-thumb p0">
-                                            <a href="single.html">
-                                                <img src="assets/img/demo/small-proerty-2.jpg">
-                                            </a>
-                                            <span class="blg-date">12-12-2020</span>
-
-                                        </div>
-                                        <div class="col-md-8  col-sm-8 col-xs-8  blg-entry">
-                                            <h6> <a href="single.html">Tiêu đề tin </a></h6> 
-                                            <p style="line-height: 17px; padding: 8px 2px;">Nội dung tin ...</p>
+                                        <div class="col-md-12  col-sm-12 col-xs-12  blg-entry">
+                                            <h6> <a href="{{route('details',$lw->id_detail)}}">{{$lw->title}} </a></h6> 
+                                            {{-- <p style="line-height: 17px; padding: 8px 2px;">{{$lw->amount}} đ</p> --}}
+                                            {{-- <span><i class="fa fa-eye"></i>  {{$lw->views}} </span> --}}
+                                            <p style="margin-top: -2px;"> </p>
                                         </div>
                                     </li> 
-
-                                    <li>
-                                        <div class="col-md-3 col-sm-4 col-xs-4 blg-thumb p0">
-                                            <a href="single.html">
-                                                <img src="assets/img/demo/small-proerty-2.jpg">
-                                            </a>
-                                            <span class="blg-date">12-12-2020</span>
-
-                                        </div>
-                                        <div class="col-md-8  col-sm-8 col-xs-8  blg-entry">
-                                            <h6> <a href="single.html">Tiêu đề tin </a></h6> 
-                                            <p style="line-height: 17px; padding: 8px 2px;">Nội dung tin ...</p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="col-md-3 col-sm-4 col-xs-4 blg-thumb p0">
-                                            <a href="single.html">
-                                                <img src="assets/img/demo/small-proerty-2.jpg">
-                                            </a>
-                                            <span class="blg-date">12-12-2020</span>
-
-                                        </div>
-                                        <div class="col-md-8  col-sm-8 col-xs-8  blg-entry">
-                                            <h6> <a href="single.html">Tiêu đề tin </a></h6> 
-                                            <p style="line-height: 17px; padding: 8px 2px;">Nội dung tin ...</p>
-                                        </div>
-                                    </li> 
-
-                                </ul>
+                                    <hr>
+                                    @endforeach
+                                </ul>    
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 wow fadeInRight animated">
@@ -490,10 +460,10 @@
                                 <div class="social pull-right"> 
                                     <ul>
                                         <li><a class="wow fadeInUp animated" href="https://twitter.com/kimarotec"><i class="fa fa-twitter"></i></a></li>
-                                        <li><a class="wow fadeInUp animated" href="https://www.facebook.com/kimarotec" data-wow-delay="0.2s"><i class="fa fa-facebook"></i></a></li>
-                                        <li><a class="wow fadeInUp animated" href="https://plus.google.com/kimarotec" data-wow-delay="0.3s"><i class="fa fa-google-plus"></i></a></li>
-                                        <li><a class="wow fadeInUp animated" href="https://instagram.com/kimarotec" data-wow-delay="0.4s"><i class="fa fa-instagram"></i></a></li>
-                                        <li><a class="wow fadeInUp animated" href="https://instagram.com/kimarotec" data-wow-delay="0.6s"><i class="fa fa-dribbble"></i></a></li>
+                                        <li><a class="wow fadeInUp animated" href="https://www.facebook.com/kimarotec" data-wow-delay="0.2s"><i class="fas fa-facebook"></i></a></li>
+                                        <li><a class="wow fadeInUp animated" href="https://plus.google.com/kimarotec" data-wow-delay="0.3s"><i class="fas fa-google-plus"></i></a></li>
+                                        <li><a class="wow fadeInUp animated" href="https://instagram.com/kimarotec" data-wow-delay="0.4s"><i class="fas fa-instagram"></i></a></li>
+                                        <li><a class="wow fadeInUp animated" href="https://instagram.com/kimarotec" data-wow-delay="0.6s"><i class="fas fa-dribbble"></i></a></li>
                                     </ul> 
                                 </div>
                             </div>
@@ -504,7 +474,7 @@
             </div>
         </div>
           
-        @include('template/script')
+        {{-- @include('template/script') --}}
         
         <script src="{{asset('')}}assets/js/vendor/modernizr-2.6.2.min.js"></script>
         <script src="{{asset('')}}assets/js/jquery-1.10.2.min.js"></script>

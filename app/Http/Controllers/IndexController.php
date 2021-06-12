@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\URL;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,7 @@ class IndexController extends Controller
 {
     public function index()
     {
-        
+        $listViewAll = detail::orderBy('views','DESC')->take(3)->get(); 
         $listDetail = DB::table('provinces')
                             ->join('districts','provinces.id_pro','=','districts.id_pro')
                             ->join('villages','districts.id_dis','=','villages.id_dis')
@@ -40,22 +41,24 @@ class IndexController extends Controller
                                         'villages.name as xa',
                                         'images.url',
                                         'details.id_detail',
-                                        'details.created_at'
+                                        'details.created_at',
+                                        'details.views'
                                     )
-                            ->groupBy('details.id_detail')        
+                            ->groupBy('details.id_detail')
+                            ->orderBy('id_detail','DESC')        
                             ->paginate(10);
         $types = types::all();
         $categories = DB::table('categories')->get();
         $provinces = provinces::all();
                             // dd($listDetail);
-        return view('template.index',compact('listDetail','categories','types','provinces'));
+        return view('template.index',compact('listDetail','categories','types','provinces','listViewAll'));
     }
 
 
     public function searchIndex(Request $request)
     {
         $title = $request->input('search');
-
+        $listViewAll = detail::orderBy('views','DESC')->take(3)->get(); 
         $listDetail = DB::table('provinces')
                             ->join('districts','provinces.id_pro','=','districts.id_pro')
                             ->join('villages','districts.id_dis','=','villages.id_dis')
@@ -77,7 +80,8 @@ class IndexController extends Controller
                                         'villages.name as xa',
                                         'images.url',
                                         'details.id_detail',
-                                        'details.created_at'
+                                        'details.created_at',
+                                        'details.views'
                                     )
                         
                             ->groupBy('details.id_detail')        
@@ -86,7 +90,7 @@ class IndexController extends Controller
         $types = types::all();
         $provinces = provinces::all();
         $categories = DB::table('categories')->get();
-        return view('template.index',compact('listDetail','categories','provinces','types'));
+        return view('template.index',compact('listDetail','categories','provinces','types','listViewAll'));
     }
 
     public function showAddDetailUser(){
@@ -272,13 +276,14 @@ class IndexController extends Controller
         $coordiantes = explode(',',  $data);
         $lat = $coordiantes[0];
         $lng = $coordiantes[1];
+        $countImg = images::where('id_detail','=',$id)->count();
         $Types = DB::table('types')->get();
         $categories = DB::table('categories')->get();
         $provinces = DB::table('provinces')->get();
         $districts = DB::table('districts')->where('districts.id_pro','=',$detail[0]->id_pro)->get();
         $villages = DB::table('villages')->where('villages.id_dis','=',$detail[0]->id_dis)->get();  
         return view('template.updateDetail',compact('detail','Types','categories','provinces',
-                                'districts','villages','lat','lng'
+                                'districts','villages','lat','lng','countImg'
                     ));
 
     }
@@ -294,6 +299,8 @@ class IndexController extends Controller
         $amount = $request->input('amount');
         $mota = $request->input('mota');
         $toa_do = $request->input('toa_do');
+        $villages = $request->input('village');
+
 
         if($request->hasFile('file')){
             $detail = detail::find($id);
@@ -329,6 +336,7 @@ class IndexController extends Controller
     
             $map = maps::find($detail->id_map);
             $map->coordinates =  $toa_do;
+            $map->id_vil = $villages;
             $map->save();
         }
         return redirect()->route('listDetailUser');
@@ -345,6 +353,17 @@ class IndexController extends Controller
 
     public function details($id)
     {   
+        $viewDetail = detail::find($id); 
+        $viewDetail->views = $viewDetail->views + 1;
+        $viewDetail->save();
+
+        $titleViews = detail::find($id);
+
+        $listView = detail::orderBy('views','DESC')->where('id_category','=',$titleViews->id_category)->take(5)->get();
+        
+        $listViewAll = detail::orderBy('views','DESC')->take(3)->get(); 
+        // dd($listView);
+
         $detail = DB::table('provinces')
                         ->join('districts','provinces.id_pro','=','districts.id_pro')
                         ->join('villages','districts.id_dis','=','villages.id_dis')
@@ -376,6 +395,7 @@ class IndexController extends Controller
                                     'images.id_img',
                                     'maps.coordinates',
                                     'details.id_detail'
+                                    
                                 
                                 )
                         // ->groupBy('details.id_detail')   
@@ -385,8 +405,11 @@ class IndexController extends Controller
                 $lat = $coordiantes[0];
                 $lng = $coordiantes[1];
                 $categories = DB::table('categories')->get();
+        
+                // dd($lat." ".$lng );
+
                 // dd($detail);
-                return view('template.details',compact('detail','lat','lng','categories'));
+                return view('template.details',compact('detail','lat','lng','categories','listView','listViewAll'));
 
         // return view('template.details');
     }
@@ -397,6 +420,10 @@ class IndexController extends Controller
     {
         // dd($request->all());
         // ini_set('memory_limit','-1');
+       
+        $listViewAll = detail::orderBy('views','DESC')->take(3)->get(); 
+        DB::enableQueryLog();
+       
         $listDetail = DB::table('provinces')
                             ->join('districts','provinces.id_pro','=','districts.id_pro')
                             ->join('villages','districts.id_dis','=','villages.id_dis')
@@ -418,7 +445,8 @@ class IndexController extends Controller
                                         'villages.name as xa',
                                         'images.url',
                                         'details.id_detail',
-                                        'details.created_at'
+                                        'details.created_at', 
+                                        'details.views'
                                     )
                             ->groupBy('details.id_detail');        
 
@@ -426,18 +454,36 @@ class IndexController extends Controller
             $listDetail->where('details.title','LIKE', '%'.$request->input('search').'%');
         }
         if($request->filled('amount')){
-           
-            $listDetail->where([['details.amount','>=',$request->input('amount')[0].'000000000'],
-                                ['details.amount','<=',$request->input('amount')[2].'000000000'],
-                            ]);
+            if($request->input('amount')[0] == 7){
+                $listDetail->where('details.amount','>=',$request->input('amount')[0].'000000000');
+            }else{
+                $min = $request->input('amount')[0].'000000000';
+                $max = $request->input('amount')[2].'000000000';
+                
+                $listDetail->where([['details.amount','>=',$min],
+                                    ['details.amount','<=',$max],
+                                ]);
+            }
+          
+                            
                             // ini_set('memory_limit', '-1');
                             // print_r($listDetail);
                             // dd(DB::getQueryLog());
                         // ->where('details.amount','<=',$request->input('amount')[2].'000000000');
         }
         if($request->filled('area')){
-            $listDetail->where('details.area','>=',$request->input('area')[0].'00')
-                        ->where('details.area','<=',$request->input('area')[2].'00') ;
+            if($request->input('area')[0] == 5 ){
+                $listDetail->where('details.area','>=',$request->input('area')[0].'00');
+            }else{
+                $min = $request->input('area')[0].'00';
+                $max = $request->input('area')[2].'00';
+                $listDetail->where('details.area','>=',$min)
+                            ->where('details.area','<=',$max);
+            }
+           
+                        // ->toSql() ;
+                        // print_r($listDetail->getBindings());
+                        
                         // dd($listDetail);
         }
         if($request->filled('provinces')){
@@ -456,19 +502,21 @@ class IndexController extends Controller
             $listDetail->where('categories.id_category','=',$request->input('categories'));
         }
 
-        // dd($listDetail->paginate(10));
+        // dd($listDetail->paginate(10)->toSql());
         $listDetail = $listDetail->paginate(10);
+        // dd($listDetail);
+        // dd(DB::getQueryLog());
         $types = types::all();
         $provinces = provinces::all();
         $categories = DB::table('categories')->get();
-        return view('template.index',compact('listDetail','categories','types','provinces'));
+        return view('template.index',compact('listDetail','categories','types','provinces','listViewAll'));
         
     }
    
 
     public function redirectMenu($title)
     {
-
+        $listViewAll = detail::orderBy('views','DESC')->take(3)->get(); 
         $listDetail = DB::table('provinces')
                             ->join('districts','provinces.id_pro','=','districts.id_pro')
                             ->join('villages','districts.id_dis','=','villages.id_dis')
@@ -490,15 +538,19 @@ class IndexController extends Controller
                                         'villages.name as xa',
                                         'images.url',
                                         'details.id_detail',
-                                        'details.created_at'
+                                        'details.created_at',
+                                        'details.views'
                                     )
-                            ->groupBy('details.id_detail')        
+                            ->groupBy('details.id_detail')
+                            ->orderBy('id_detail','DESC')        
                             ->paginate(10);
         $active = "active";
         $types = types::all();
         $provinces = provinces::all();
         $categories = DB::table('categories')->get();
-        return view('template.index',compact('listDetail','categories','types','provinces','active'));
+        return view('template.index',compact('listDetail','categories','types','provinces','listViewAll'));
     }
+
+
 
 }

@@ -89,7 +89,7 @@
                             <button class="navbar-btn nav-button wow bounceInRight login" data-wow-delay="0.4s"><a href="{{route('login')}}">Đăng nhập</a></button>
                             <button class="navbar-btn nav-button wow fadeInRight" data-wow-delay="0.5s"><a href="{{route('showformRegister')}}">Đăng ký</a></button>
                         @endif
-                        </div>
+                    </div>
                     <ul class="main-nav nav navbar-nav navbar-right">
                         <li class="wow fadeInDown " data-wow-delay="0.1s"><a class="menuhome" href="{{route('home')}}">Home</a></li>
 
@@ -211,22 +211,22 @@
                                     <div class="search-row">   
                                         <div class="form-group">
                                             
-                                                <select class="form-control" name="amount" id="">
+                                                <select class="form-control" name="amount">
                                                     <option value="">Chọn mức giá</option>
                                                     <option value="0,3">Dưới 3 tỷ</option>
                                                     <option value="3,7">Từ 3 đến 7 tỷ</option>
-                                                    <option value="7,100">7 tỷ trở lên</option>
+                                                    <option value="7">7 tỷ trở lên</option>
                                                 </select>
                                             
                                         </div>
 
                                         <div class="form-group">
                                             
-                                                <select name="area" id="" class="form-control">
+                                                <select name="area"  class="form-control">
                                                     <option value="">Chọn Diện tích</option>
                                                     <option value="0,2">Dưới 200m2</option>
                                                     <option value="2,5">Từ 200m2 đến 500m2</option>
-                                                    <option value="5,100">500m2 trở lên</option>
+                                                    <option value="5">500m2 trở lên</option>
                                                 </select>
                                             
                                         </div>
@@ -344,20 +344,24 @@
                         <div class="col-md-12 "> 
                             <div class="col-xs-10 page-subheader sorting pl0">
 
-                                <ul class="sort-by-list">
-                                    <li class="active">
-                                        <a href="javascript:void(0);" class="order_by_date" data-orderby="property_date" data-order="ASC">
-                                            Ngày <i class="fa fa-sort-amount-asc"></i>					
-                                        </a>
+                                {{-- <ul class="sort-by-list">
+                                    <li class="form-group">
+                                       <select class="form-control" name="" id="sort_date">
+                                           <option value="">Sắp xếp theo ngày</option>
+                                           <option value="">Ngày mới nhất</option>
+                                           <option value="">Cũ nhất</option>
+                                       </select>
                                     </li>
                                     <li class="">
-                                        <a href="javascript:void(0);" class="order_by_price" data-orderby="property_price" data-order="DESC">
-                                            Giá <i class="fa fa-sort-numeric-desc"></i>						
-                                        </a>
-                                    </li>
-                                </ul><!--/ .sort-by-list-->
-
-                                <div class="items-per-page">
+                                        <select class="form-control" name="" id="sort_amount">
+                                            <option value="">Sắp xếp giá</option>
+                                            <option value="ASC">Tăng dần</option>
+                                            <option value="DESC">Giảm dần</option>
+                                        </select>
+                                    </li> --}}
+                                {{-- </ul><!--/ .sort-by-list--> --}}
+                               
+                                {{-- <div class="items-per-page">
                                     <label for="items_per_page"><b>Trang:</b></label>
                                     <div class="sel">
                                         <select id="items_per_page" name="per_page">
@@ -371,7 +375,7 @@
                                             <option value="60">60</option>
                                         </select>
                                     </div><!--/ .sel-->
-                                </div><!--/ .items-per-page-->
+                                </div><!--/ .items-per-page--> --}}
                             </div>
 
                             <div class="col-xs-2 layout-switcher">
@@ -401,6 +405,7 @@
                                             <br><b>Địa chỉ: </b> {{$dt->tinh}}, {{$dt->huyen}}, {{$dt->xa}}
                                             <br><b>Ngày đăng bài:</b> {{$dt->created_at}}
                                             <br><br><span class=" pull-right">{{$dt->nameUser}}</span>
+                                            <span class ="pull-left"> <i class="fa fa-eye"></i>  {{$dt->views}}</span>
                                         </div>
                                     </div>
                                 </div> 
@@ -473,50 +478,23 @@
                         </div>
                         <div class="col-md-3 col-sm-6 wow fadeInRight animated">
                             <div class="single-footer">
-                                <h4>Tin mới</h4>
+                                <h4>Xem nhiều</h4>
                                 <div class="footer-title-line"></div>
                                 <ul class="footer-blog">
+                                    
+                                    @foreach($listViewAll as $lw)
+                                    
                                     <li>
-                                        <div class="col-md-3 col-sm-4 col-xs-4 blg-thumb p0">
-                                            <a href="single.html">
-                                                <img src="{{asset('')}}assets/img/demo/small-proerty-2.jpg">
-                                            </a>
-                                            <span class="blg-date">12-12-2020</span>
-
-                                        </div>
-                                        <div class="col-md-8  col-sm-8 col-xs-8  blg-entry">
-                                            <h6> <a href="single.html">Tiêu đề tin </a></h6> 
-                                            <p style="line-height: 17px; padding: 8px 2px;">Nội dung tin ...</p>
+                                        <div class="col-md-12  col-sm-12 col-xs-12  blg-entry">
+                                            <h6> <a href="{{route('details',$lw->id_detail)}}">{{$lw->title}} </a></h6> 
+                                            {{-- <p style="line-height: 17px; padding: 8px 2px;">{{$lw->amount}} đ</p> --}}
+                                            {{-- <span><i class="fa fa-eye"></i>  {{$lw->views}} </span> --}}
+                                            <p style="margin-top: -2px;"> </p>
                                         </div>
                                     </li> 
-
-                                    <li>
-                                        <div class="col-md-3 col-sm-4 col-xs-4 blg-thumb p0">
-                                            <a href="single.html">
-                                                <img src="{{asset('')}}assets/img/demo/small-proerty-2.jpg">
-                                            </a>
-                                            <span class="blg-date">12-12-2020</span>
-
-                                        </div>
-                                        <div class="col-md-8  col-sm-8 col-xs-8  blg-entry">
-                                            <h6> <a href="single.html">Tiêu đề tin </a></h6> 
-                                            <p style="line-height: 17px; padding: 8px 2px;">Nội dung tin ...</p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="col-md-3 col-sm-4 col-xs-4 blg-thumb p0">
-                                            <a href="single.html">
-                                                <img src="{{asset('')}}assets/img/demo/small-proerty-2.jpg">
-                                            </a>
-                                            <span class="blg-date">12-12-2020</span>
-
-                                        </div>
-                                        <div class="col-md-8  col-sm-8 col-xs-8  blg-entry">
-                                            <h6> <a href="single.html">Tiêu đề tin </a></h6> 
-                                            <p style="line-height: 17px; padding: 8px 2px;">Nội dung tin ...</p>
-                                        </div>
-                                    </li> 
-
+                                    <hr>
+                                    @endforeach
+                                    
                                 </ul>
                             </div>
                         </div>

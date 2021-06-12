@@ -26,9 +26,9 @@ h2 {
 
 .right { float: right; }
 
-::placeholder{
+/* ::placeholder{
     color: #dc3545 !important;
-}
+} */
 </style>
 <!------ Include the above in your HEAD tag ---------->
 
@@ -36,37 +36,42 @@ h2 {
 		<div class="row">
 			<div class="panel panel-primary">
 				<div class="panel-body">
-					<form method="POST" action="{{route('submitRegister')}}" role="form">
+					<form method="POST" action="{{route('submitRegister')}}"  enctype="multipart/form-data">
 						@csrf
 						<div class="form-group">
-							<h2>Create account</h2>
+							<h2>Tạo tài khoản</h2>
 						</div>
 						<div class="form-group">
-							<label class="control-label" for="signupName">Your name (Lớn hơn 5 kí tự)</label>
-							<input id="signupName" name="name"  value="{{old('name')}}" type="text" maxlength="50" class="form-control" placeholder=" @error('name'){{$message}}@enderror">
+							<label class="control-label" for="signupName">Tên của bạn (Lớn hơn 5 kí tự)</label>
+							<input id="signupName" name="name"  value="{{old('name')}}" type="text" maxlength="50" class="form-control" placeholder="Nhập họ và tên">
+							@error('name') <p class="text-danger"> {{$message}} </p>@enderror
 						</div>
 						<div class="form-group">
 							<label class="control-label" for="signupEmail">Email</label>
-							<input id="signupEmail" name="email" type="email" value="{{old('email')}}" maxlength="50" class="form-control" placeholder=" @error('email'){{$message}}@enderror">
+							<input id="signupEmail" name="email" type="email" value="{{old('email')}}" maxlength="50" class="form-control" placeholder="Nhập email">
+							@error('email') <p class="text-danger"> {{$message}} </p>@enderror
 						</div>
 						<div class="form-group">
-							<label class="control-label" for="signupPassword">Password (Lớn hơn 5 kí tự)</label>
-							<input id="signupPassword" name="password" type="password" value="{{old('password')}}" maxlength="25" class="form-control" length="40" placeholder=" @error('password'){{$message}}@enderror">
+							<label class="control-label" for="signupPassword">Mật khẩu (Lớn hơn 5 kí tự)</label>
+							<input id="signupPassword" name="password" type="password" value="{{old('password')}}" maxlength="25" class="form-control" length="40" placeholder="Nhập mật khẩu">
+							@error('password') <p class="text-danger"> {{$message}} </p>@enderror
 						</div>
 						<div class="form-group">
-							<label class="control-label" for="signupPasswordagain">Password again</label>
-							<input id="signupPasswordagain" name="password_confirm" value="{{old('passwprd_confirm')}}" type="password" maxlength="25" class="form-control" placeholder=" @error('password_confirm'){{$message}}@enderror">
+							<label class="control-label" for="signupPasswordagain">Nhập lại mật khẩu</label>
+							<input id="signupPasswordagain" name="password_confirm" value="{{old('passwprd_confirm')}}" type="password" maxlength="25" class="form-control" placeholder="Nhập lại mật khẩu">
+							@error('password_confirm') <p class="text-danger"> {{$message}} </p>@enderror
 						</div>
 						<div class="form-group">
-							<label class="control-label" for="signupPasswordagain">Phone number</label>
-							<input id="phoneNumber" name="phoneNumber" type="text" value="{{old('phoneNumber')}}" maxlength="25" class="form-control" placeholder=" @error('phoneNumber'){{$message}}@enderror">
+							<label class="control-label" for="signupPasswordagain">Số điện thoại</label>
+							<input id="phoneNumber" name="phoneNumber" type="text" value="{{old('phoneNumber')}}" maxlength="25" class="form-control" placeholder="Nhập số điện thoại">
+							@error('phoneNumber') <p class="text-danger"> {{$message}} </p>@enderror
 						</div>
 						<div class="form-group">
-							<button id="signupSubmit" type="submit" class="btn btn-info btn-block">Create your account</button>
+							<button id="signupSubmit" type="submit" class="btn btn-info btn-block">Tạo tài khoản</button>
 						</div>
-						<p class="form-group">By creating an account, you agree to our <a href="#">Terms of Use</a> and our <a href="#">Privacy Policy</a>.</p>
+						
 						<hr>
-						<p></p>Already have an account? <a href="{{route('login')}}">Sign in</a></p>
+						<p></p>Bạn đã có tài khoản chưa? <a href="{{route('login')}}">Đăng nhập</a></p>
 					</form>
 				</div>
 			</div>

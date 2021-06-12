@@ -32,6 +32,7 @@ Route::get('/ajax','DetailController@ajax')->name('ajax');
 Route::get('/ajaxVilages','DetailController@ajaxVilages')->name('ajaxVilages');
 Route::get('/searchct','IndexController@searchIndexCT')->name('searchIndexCT');
 Route::get('/-{title}','IndexController@redirectMenu')->name('redirectMenu');
+Route::get('/deleteImgAjax/{id}','DetailController@deleteImgAjax')->name('deleteImgAjax');
 
 
 
@@ -63,7 +64,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth','checkadmin']],functi
     Route::get('/editDetail/{id}','DetailController@editDetail')->name('editDetail');
     Route::post('/updateDetail','DetailController@updateDetail')->name('updateDetail');
     Route::get('/deleteDetail/{id}','DetailController@deleteDetail')->name('deleteDetail');
-    Route::get('/deleteImgAjax/{id}','DetailController@deleteImgAjax')->name('deleteImgAjax');
     Route::any('/searchDetail','DetailController@searchDetail')->name('searchDetail');
     
     //Thêm các mặc định

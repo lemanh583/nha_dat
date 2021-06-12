@@ -1,4 +1,4 @@
-  <script>
+  {{-- <script>
       // Initialize and add the map
       function initMap() {
         // The location of Ulur
@@ -14,4 +14,4 @@
           map: map,
         });
       }
-  </script>
+  </script> --}}

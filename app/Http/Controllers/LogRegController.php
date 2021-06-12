@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Auth;
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class LogRegController extends Controller
 {
@@ -62,7 +63,10 @@ class LogRegController extends Controller
 
     public function submitRegister(Request $request){
 
+        
         // kiểm tra dữ liệu đầu vào form
+        // dd($request->all());
+
         $validated = Validator::make($request->all(),[
             'name' => 'required|min:5|max:255',
             'email' => 'required|email|unique:App\User,email',
@@ -81,18 +85,23 @@ class LogRegController extends Controller
             'phoneNumber.require' => "Không được bỏ trống",
             'phoneNumber.numeric' => "Số điện thoại phải là số"
         ]);
-        if($validated->fails()){
-            return redirect()
-                    ->back()
-                    ->withErrors($validated)
-                    ->withInput();
-        }
+            if($validated->fails()){
+                return redirect()
+                        ->back()
+                        ->withErrors($validated)
+                        ->withInput();
+            }
+       
+       
 
+        // dd('sdjjsd');
         // Lấy dữ liệu từ request
         $name = $request->input('name');
         $email = $request->input('email');
         $password = $request->input('password');
         $phoneNumber = $request->input('phoneNumber');
+
+        // dd($email);
 
         // chèn dữ liệu vào bảng user
 
@@ -101,9 +110,12 @@ class LogRegController extends Controller
         $user->email = $email;
         $user->password = Hash::make($password);
         $user->phone_number = $phoneNumber;
+        $user->images = Storage::url('user_img/anh_mac_dinh.jpg');
+        // $user->id_role = 3;
         $user->save();    
-
-        // return redirect('/');
+        
+        Auth::login($user);
+        return redirect('/');
 
     }
 

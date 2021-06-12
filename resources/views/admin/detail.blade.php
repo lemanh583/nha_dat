@@ -18,11 +18,13 @@
     <table class="table" >
       <thead>
         <tr>
+          <th scope="col">Ngày tạo</th>
           <th scope="col">Tên</th>
           <th scope="col">Email</th>
           <th scope="col">kiểu</th>
           <th scope="col">Loại</th>
           <th scope="col">Tiêu đề</th>
+          <th scope="col">Lượt xem</th>
           <th scope="col">Hành động</th>
           
         </tr>
@@ -30,11 +32,17 @@
       @foreach($listDetail as $detail)
       <tbody>
         <tr>
+          @php
+              $date = explode(' ',  $detail->created_at); 
+              // print_r ($date);
+          @endphp
+          <td>@php echo ($date[0]) @endphp</td>
           <td>{{$detail->nameUser}}</td>
           <td>{{$detail->email}}</td>
           <td>{{$detail->nameCategory}}</td>
           <td>{{$detail->nameType}}</td>
           <td>{{$detail->des}}...</td>
+          <td align="center">{{$detail->views}}</td>
           <td><a href="{{route('viewDetail',$detail->id_detail)}}"><button class = "btn btn-success" >Chi tiết</button></a>
           <a href="{{route('editDetail',$detail->id_detail)}}"><button class = "btn btn-warning">Sửa</button></a>
           <button class = "btn btn-danger xoact" type="button" url="{{route('deleteDetail',$detail->id_detail)}}">Xoá</button></td>   
