@@ -243,7 +243,7 @@ class DetailController extends Controller
             
             //lấy idmap mới thêm
             $id_map = DB::table('maps')->select(DB::raw('MAX(id_map) as idMax'))->get();
-            // dd($id_map);
+            // dd($id_map); 
             // dd()
 
             //thêm bảng detail
@@ -298,8 +298,12 @@ class DetailController extends Controller
                     'types.name as nameType',
                     'details.title',
                     'details.id_detail',
-                    DB::raw("substr(details.descriptions,1,15) as des ")
+                    DB::raw("substr(details.descriptions,1,15) as des "),
+                    'details.created_at',
+                    'details.views'
                 )
+        ->groupBy('details.id_detail')
+        ->orderBy('id_detail','DESC')        
         ->paginate(10);
 
         return view('admin.detail',compact('listDetail'));

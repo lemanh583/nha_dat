@@ -48,7 +48,7 @@ h2 {
 						</div>
 						<div class="form-group">
 							<label class="control-label" for="signupEmail">Email</label>
-							<input id="signupEmail" name="email" type="email" value="{{old('email')}}" maxlength="50" class="form-control" placeholder="Nhập email">
+							<input id="signupEmail" name="email" type="text" value="{{old('email')}}" maxlength="50" class="form-control" placeholder="Nhập email">
 							@error('email') <p class="text-danger"> {{$message}} </p>@enderror
 						</div>
 						<div class="form-group">

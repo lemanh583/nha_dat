@@ -79,7 +79,7 @@
             <div class="container">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="index.html"><img src="{{asset('')}}assets/img/logo.png" alt=""></a>
+                    <a class="navbar-brand" href="/"><img src="{{asset('')}}assets/img/logo.png" alt=""></a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->

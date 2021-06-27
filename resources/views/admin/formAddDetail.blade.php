@@ -123,6 +123,7 @@
       <div class="col-sm-2">
           <h3>Xác nhận </h3>
         <button class="btn btn-warning" type="submit">Xác nhận</button>
+        <button class="btn btn-dark"><a href="{{route('showlistDetail')}}">Trở về</a></button>
       </div>
   </div>
 </form>
